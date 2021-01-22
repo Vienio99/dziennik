@@ -1,0 +1,60 @@
+import openpyxl
+
+def generateStudentRankingForSubject(subject):
+  wb = openpyxl.load_workbook('oceny-grupa1.xlsx')
+  sheet = wb[subject]
+
+  ranking = {}
+  for i in range(1, sheet.max_row + 1):
+    if sheet.cell(row=i, column=2).value in ranking:
+      ranking[sheet.cell(row=i, column=2).value].append(sheet.cell(row=i, column=1).value)
+    else:
+      ranking[sheet.cell(row=i, column=2).value] = [sheet.cell(row=i, column=1).value]
+  ranking = dict(sorted(ranking.items(), reverse=True))
+
+  counter = 1
+  for students in ranking.values():
+    placement = ''
+    for student in students:
+      placement += student + ', '
+    print(str(counter) + '. ' + placement[:-2])
+    counter += 1
+
+
+generateStudentRankingForSubject('Informatyka')
+
+
+def generateStudentRankingForAllSubjects():
+  wb = openpyxl.load_workbook('oceny-grupa1.xlsx')
+  grades = {}
+
+  for sheet in wb.worksheets:
+    sheet = wb[sheet.title]
+    for i in range(1, sheet.max_row + 1):
+      if sheet.cell(row=i, column=1).value in grades:
+        grades[sheet.cell(row=i, column=1).value].append(sheet.cell(row=i, column=2).value)
+      else:
+        grades[sheet.cell(row=i, column=1).value] = [sheet.cell(row=i, column=2).value]
+  
+  for key in grades.keys():
+    grades[key] = round(sum(grades[key])/len(wb.worksheets), 2)
+
+  ranking = {}
+  for key, value in grades.items():
+    if value in ranking:
+      ranking[value].append(key)
+    else:
+      ranking[value] = [key]
+
+  ranking = dict(sorted(ranking.items(), reverse=True))
+
+  counter = 1
+  for students in ranking.values():
+    placement = ''
+    for student in students:
+      placement += student + ', '
+    print(str(counter) + '. ' + placement[:-2])
+    counter += 1
+
+
+generateStudentRankingForAllSubjects()
