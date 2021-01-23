@@ -1,4 +1,54 @@
-import openpyxl
+import os, openpyxl
+
+os.system('cls')
+
+
+
+def calculateAverageForSubject(subject):
+    wb = openpyxl.load_workbook('oceny-grupa1.xlsx')
+    sheet = wb[subject]
+
+    gradesList = []
+    for i in range(1, sheet.max_row + 1):
+        gradesList.append(sheet.cell(row=i, column=2).value)
+    
+    average = sum(gradesList) / len(gradesList)
+    print(average)
+
+calculateAverageForSubject('Język angielski')
+
+def calculateAverageForStudent(student):
+    wb = openpyxl.load_workbook('oceny-grupa1.xlsx')
+    gradesList = []
+    for sheet in wb.worksheets:
+        sheet = wb[sheet.title]
+        for i in range(1, sheet.max_row + 1):
+            if sheet.cell(row=i, column=1).value == student:
+                gradesList.append(sheet.cell(row=i, column=2).value)
+    average = sum(gradesList) / len(gradesList)
+    print(average)
+
+calculateAverageForStudent('')
+
+def generateStudentRankingForSubject(subject):
+    wb = openpyxl.load_workbook('oceny-grupa1.xlsx')
+    students = {}
+    sheet = wb[subject]
+    for i in range(1, sheet.max_row + 1):
+        students[sheet.cell(row=i, column=1).value] = sheet.cell(row=i, column=2).value
+    students = sorted((value, key) for (key, value) in students.items())
+    students = students[::-1]
+    print(students)
+
+            
+    
+
+generateStudentRankingForSubject('Informatyka')
+
+
+
+
+
 
 def generateStudentRankingForSubject(subject):
 
